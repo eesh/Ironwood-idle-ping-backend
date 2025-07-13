@@ -8,6 +8,7 @@ const { Client, GatewayIntentBits } = require('discord.js');
 // IMPORTANT: Your Discord Bot Token should be stored as an Environment Variable in Vercel.
 // DO NOT hardcode it here. Vercel will inject it at runtime.
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+const API_ENDPOINT = process.env.API_ENDPOINT;
 
 // Initialize Discord client with necessary intents
 const client = new Client({
@@ -27,6 +28,8 @@ client.once('ready', () => {
 
 // Only log in if the client is not already ready (important for serverless environments)
 if (!client.isReady()) {
+    console.log(API_ENDPOINT);
+    console.log("Token length:", API_ENDPOINT.length);
     client.login(DISCORD_BOT_TOKEN)
         .catch(error => console.error("Failed to log in Discord bot:", error));
 }
@@ -64,6 +67,7 @@ module.exports = async (req, res) => {
             console.log("Discord client successfully re-logged in.");
         } catch (loginError) {
             console.error("Failed to re-login Discord bot:", loginError);
+            console.error("Token length:", API_ENDPOINT.length);
             return res.status(500).json({ success: false, error: 'Discord bot not ready and failed to re-login.' });
         }
     }
